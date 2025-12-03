@@ -25,7 +25,8 @@ source-repository head
 
 library
   exposed-modules:
-      Lib
+      AdventOfCode
+      AdventOfCode.Day1
   other-modules:
       Paths_adventOfCode
   autogen-modules:
