@@ -6,7 +6,6 @@ import qualified Data.Text as T
 import qualified Data.Text.IO as T.IO
 import qualified Data.Text.Read as T.R
 
-
 inputPath :: Word -> FilePath
 inputPath n = "./input/day" ++ show n ++ ".txt" 
 
