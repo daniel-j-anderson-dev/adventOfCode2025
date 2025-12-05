@@ -22,18 +22,6 @@ rotationFromString s = do
 parseInput :: String -> [Int]
 parseInput input = mapMaybe rotationFromString (lines input)
 
-solution :: Puzzle -> String -> Int
-solution part input = fst ( foldl step (0, dialStart) (parseInput input))
-  where
-    step (zeroCount, dialPosition) offset = 
-      let newDialPosition = applyRotation dialPosition offset
-          newZeroCount = case part of
-            Part1 -> case newDialPosition of
-              0 -> succ zeroCount
-              _ -> zeroCount
-            Part2 -> zeroCount + zeroPasses dialPosition offset
-       in (newZeroCount, newDialPosition)
-
 zeroPasses :: Int -> Int -> Int
 zeroPasses dialPosition offset
   | offset < 0 = newDialPosition `div` (-dialSize) - dialPosition `div` (-dialSize)
@@ -43,6 +31,18 @@ zeroPasses dialPosition offset
 
 applyRotation :: Int -> Int -> Int
 applyRotation dialPosition offset = (dialPosition + offset) `mod` dialSize
+
+solution :: Puzzle -> String -> Int
+solution part input = fst (foldl step (0, dialStart) (parseInput input))
+  where
+    step (zeroCount, dialPosition) offset =
+      let newDialPosition = applyRotation dialPosition offset
+          newZeroCount = case part of
+            Part1 -> case newDialPosition of
+              0 -> succ zeroCount
+              _ -> zeroCount
+            Part2 -> zeroCount + zeroPasses dialPosition offset
+       in (newZeroCount, newDialPosition)
 
 expected :: Puzzle -> Int
 expected Part1 = 1152
