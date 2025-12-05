@@ -1,45 +1,31 @@
 module AdventOfCode.Day1 where
 
+import AdventOfCode (Puzzle (Part1, Part2))
 import Data.Maybe (mapMaybe)
 import Text.Read (readMaybe)
 
-dialStart :: Word
+dialStart :: Int
 dialStart = 50
 
-dialSize :: Word
+dialSize :: Int
 dialSize = 100
 
-expectedSolution1 :: Word
-expectedSolution1 = 1152
-
-data Direction = L | R
-
-directionFromString :: String -> Maybe Direction
-directionFromString s = case s of
-  ('L' : _) -> Just L
-  ('R' : _) -> Just R
-  _ -> Nothing
-
-data Rotation = Rotation Direction Word
-
-offset :: Rotation -> Word
-offset (Rotation direction distance) = case direction of
-  L -> dialSize - (distance `mod` dialSize)
-  R -> distance
-
-rotationFromString :: String -> Maybe Rotation
+rotationFromString :: String -> Maybe Int
 rotationFromString s = do
-  direction <- directionFromString s
+  direction <- case s of
+    ('L' : _) -> Just (-1)
+    ('R' : _) -> Just 1
+    _ -> Nothing
   distance <- readMaybe (drop 1 s)
-  Just (Rotation direction distance)
+  Just (direction * distance)
 
-parseInput :: String -> [Rotation]
+parseInput :: String -> [Int]
 parseInput input = mapMaybe rotationFromString (lines input)
 
-solution1 :: String -> Word
-solution1 input = fst (foldl
-  (\(zeroCount, dialPosition) rotation ->
-    let newDialPosition = (dialPosition + (offset rotation)) `mod` dialSize
+solution :: Puzzle -> String -> Int
+solution Part1 input = fst (foldl
+  (\(zeroCount, dialPosition) offset ->
+    let newDialPosition = applyRotation dialPosition offset
         newZeroCount = case newDialPosition of
           0 -> zeroCount + 1
           _ -> zeroCount
@@ -47,3 +33,26 @@ solution1 input = fst (foldl
   )
   (0, dialStart)
   (parseInput input))
+
+solution Part2 input = fst (foldl
+  (\(zeroCount, dialPosition) offset ->
+    let newDialPosition = applyRotation dialPosition offset
+        newZeroCount = zeroCount + zeroPasses dialPosition offset
+     in (newZeroCount, newDialPosition)
+  )
+  (0, dialStart)
+  (parseInput input))
+
+zeroPasses :: Int -> Int -> Int
+zeroPasses dialPosition offset
+  | offset < 0 = newDialPosition `div` (-dialSize) - dialPosition `div` (-dialSize)
+  | otherwise = newDialPosition `div` dialSize
+  where
+    newDialPosition = dialPosition + offset
+
+applyRotation :: Int -> Int -> Int
+applyRotation dialPosition offset = (dialPosition + offset) `mod` dialSize
+
+expected :: Puzzle -> Int
+expected Part1 = 1152
+expected Part2 = 6671

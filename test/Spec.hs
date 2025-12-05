@@ -1,18 +1,26 @@
 import qualified AdventOfCode (input)
-import qualified AdventOfCode.Day1 (solution1, expectedSolution1)
+import AdventOfCode (Puzzle (Part1, Part2))
+import qualified AdventOfCode.Day1 (solution, expected)
 
 main :: IO ()
 main = do
   day1Input <- AdventOfCode.input 1
 
-  let day1Part1Output = AdventOfCode.Day1.solution1 day1Input
+  test
+    "Day1.Part1"
+    (AdventOfCode.Day1.expected Part1)
+    (AdventOfCode.Day1.solution Part1 day1Input)
 
-  assertEqual "Day1.Part1" AdventOfCode.Day1.expectedSolution1 day1Part1Output
+  test
+    "Day1.Part2"
+    (AdventOfCode.Day1.expected Part2)
+    (AdventOfCode.Day1.solution Part2 day1Input)
 
   pure ()
 
-assertEqual :: Eq a => String -> a -> a -> IO ()
-assertEqual message expected actual =
+test :: (Eq a, Show a) => String -> a -> a -> IO ()
+test message expected actual =
   if expected == actual
-  then putStrLn $ message ++ ": PASSED"
-  else error $ message ++ ": FAILED"
+    then putStrLn $ message ++ ": PASSED"
+    else error $ message ++ ": FAILED\nexpected: " ++ show expected ++ "\nactual  : " ++ show actual ++ "\n"
+
