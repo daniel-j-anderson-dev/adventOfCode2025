@@ -4,7 +4,6 @@ module AdventOfCode.Day1 where
 
 import AdventOfCode (Puzzle (Part1, Part2), parseIntegralBase10)
 import Data.Maybe (mapMaybe)
-import Text.Read (readMaybe)
 import qualified Data.Text as T
 
 dialStart :: Int
@@ -38,14 +37,14 @@ applyRotation dialPosition offset = (dialPosition + offset) `mod` dialSize
 solution :: Puzzle -> T.Text -> Int
 solution part input = fst (foldl step (0, dialStart) (parseInput input))
   where
-    step (zeroCount, dialPosition) offset =
-      let newDialPosition = applyRotation dialPosition offset
-          newZeroCount = case part of
-            Part1 -> case newDialPosition of
-              0 -> succ zeroCount
-              _ -> zeroCount
-            Part2 -> zeroCount + zeroPasses dialPosition offset
-       in (newZeroCount, newDialPosition)
+    step (zeroCount, dialPosition) offset = (newZeroCount, newDialPosition)
+      where
+        newDialPosition = applyRotation dialPosition offset
+        newZeroCount = case part of
+          Part1 -> case newDialPosition of
+            0 -> succ zeroCount
+            _ -> zeroCount
+          Part2 -> zeroCount + zeroPasses dialPosition offset
 
 expected :: Puzzle -> Int
 expected Part1 = 1152
