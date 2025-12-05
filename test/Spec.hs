@@ -1,6 +1,9 @@
+{-# LANGUAGE OverloadedStrings #-}
+
 import qualified AdventOfCode (input)
 import AdventOfCode (Puzzle (Part1, Part2))
 import qualified AdventOfCode.Day1 (solution, expected)
+import qualified Data.Text as T
 
 main :: IO ()
 main = do
@@ -18,7 +21,7 @@ main = do
 
   pure ()
 
-test :: (Eq a, Show a) => String -> a -> a -> IO ()
+test :: (Eq a, Show a) => T.Text -> a -> a -> IO ()
 test message expected actual =
   if expected == actual
     then putStrLn $ message ++ ": PASSED"
