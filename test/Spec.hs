@@ -4,6 +4,7 @@ import qualified AdventOfCode (input)
 import AdventOfCode (Puzzle (Part1, Part2))
 import qualified AdventOfCode.Day1 (solution, expected)
 import qualified Data.Text as T
+import qualified Data.Text.IO as T.IO
 
 main :: IO ()
 main = do
@@ -24,6 +25,6 @@ main = do
 test :: (Eq a, Show a) => T.Text -> a -> a -> IO ()
 test message expected actual =
   if expected == actual
-    then putStrLn $ message ++ ": PASSED"
-    else error $ message ++ ": FAILED\nexpected: " ++ show expected ++ "\nactual  : " ++ show actual ++ "\n"
+    then T.IO.putStrLn $ message <> ": PASSED"
+    else error (T.unpack (message <> ": FAILED\nexpected: " <> T.show expected <> "\nactual  : " <> T.show actual <> "\n"))
 
